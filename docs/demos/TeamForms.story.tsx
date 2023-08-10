@@ -1,7 +1,7 @@
 import { range } from 'd3-array';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { GraphCanvas, Svg, LayoutTypes, SphereWithIcon, SphereWithSvg, DefaultNode } from '../../src';
+import { GraphCanvas, GraphCanvasRef, Svg, LayoutTypes, SphereWithIcon, SphereWithSvg, DefaultNode, useSelection, lightTheme } from '../../src';
 import {
   iconNodes,
   manyNodes,
@@ -18,204 +18,300 @@ import faBuilding from '../assets/fa-icons/fa-building.svg';
 import faAddressCard from '../assets/fa-icons/fa-address-card.svg';
 import faMapMarkerAlt from '../assets/fa-icons/fa-map-marker-alt.svg';
 import originalDataStructure from '../assets/original-data-structure.json';
+import originalDataStructureHuge from '../assets/original-data-structure-huge.json';
+import _ from 'lodash';
+import { normalizeStory } from '@storybook/preview-api';
 
 export default {
   title: 'Demos/TeamForms',
   component: GraphCanvas
 };
 
-const random = (floor, ceil) => Math.floor(Math.random() * ceil) + floor;
+const ICONS_MAPPING = {
+  'fa-user' : faUser,
+  'fa-users' : faUsers,
+  'fa-chart-pie' : faChartPie,
+  'fa-building' : faBuilding,
+  'fa-address-card' : faAddressCard,
+  'fa-map-marker-alt' : faMapMarkerAlt
+}
 
-export const NoEdges = () => <GraphCanvas nodes={manyNodes} edges={[]} />;
+const convertData = (data : Object, typesToExclude : Array<String>) : any => {
+  const rawNodes : Array<Object> = [];
+  const rawEdges : Array<Object> = [];
+  const nodes : Array<Object> = [];
+  const edges : Array<Object> = [];
+  const rejectedIds : Array<String> = []
 
-export const Icons = () => (
-  <GraphCanvas
-    nodes={iconNodes}
-    edges={simpleEdges}
-  />
-);
-
-export const Custom3DNode = () => (
-  <GraphCanvas
-    nodes={simpleNodes}
-    edges={simpleEdges}
-    cameraMode="rotate"
-    renderNode={({ size, color, opacity }) => (
-      <group>
-        <mesh>
-          <torusKnotGeometry attach="geometry" args={[size, 1.25, 50, 8]} />
-          <meshBasicMaterial
-            attach="material"
-            color={color}
-            opacity={opacity}
-            transparent
-          />
-        </mesh>
-      </group>
-    )}
-  />
-);
-
-export const SphereWithIconNode = () => (
-  <GraphCanvas
-    nodes={iconNodes}
-    edges={simpleEdges}
-    cameraMode="rotate"
-    renderNode={({  node, ...rest }) => (
-      <SphereWithIcon
-        {...rest}
-        node={node}
-        image={(<FontAwesomeIcon icon="check-square" />)}
-      />
-    )}
-  />
-);
-
-export const SvgIconNode = () => (
-  <GraphCanvas
-    nodes={iconNodes}
-    edges={simpleEdges}
-    cameraMode="rotate"
-    renderNode={({  node, ...rest }) => (
-      <Svg
-        {...rest}
-        node={node}
-        image={node.icon || ''}
-      />
-    )}
-  />
-);
-
-const convertToNodes = function(data) {
-  var nodes = []
-  const ICONS_MAPPING = {
-
-  }
   Object.values(data).forEach(node => {
     if (node.type === 'node') {
       const newNode = {
         id: node.id,
-        type: node.type,
+        type: node.data.type,
         label: node.label.text,
         fill : node.color,
-      }
-
-      if (node.fontIcon.text === 'fa-user') {
-        newNode.icon = faUser;
-      }
-
-      if (node.fontIcon.text === 'fa-users') {
-        newNode.icon = faUsers;
-      }
-
-      if (node.fontIcon.text === 'fa-chart-pie') {
-        newNode.icon = faChartPie;
+        borderColor : node.border.color,
+        icon : ICONS_MAPPING[node.fontIcon.text],
+        url : node.url,
+        counter : node.counter
       }
       
-      if (node.fontIcon.text === 'fa-building') {
-        newNode.icon = faBuilding;
-      }
-
-      if (node.fontIcon.text === 'fa-address-card') {
-        newNode.icon = faAddressCard;
-      }
-
-      if (node.fontIcon.text === 'fa-map-marker-alt') {
-        newNode.icon = faMapMarkerAlt;
-      }
-      
-      nodes.push(newNode);
+      rawNodes.push(newNode);
     }
-  });
 
-  return nodes
-}
-
-const convertToEdges = function(data) {
-  var edges = []
-  
-  Object.values(data).forEach(edge => {
-    if (edge.type === 'link') {
+    if (node.type === 'link') {
       const newEdge = {
-        id: edge.id,
-        type: edge.type,
-        label: edge.relationshipType,
-        source : edge.id1,
-        target : edge.id2,
+        id: node.id,
+        type: node.type,
+        label: node.relationshipType,
+        target : node.id2,
+        source : node.id1,
       }
 
-      edges.push(newEdge);
+      rawEdges.push(newEdge);
     }
   });
-  return edges;
+  
+  rawNodes.forEach((node) => {
+    console.log(node);
+    console.log(typesToExclude, "=", node.type);
+    if (typesToExclude.includes(node.type)) {
+      rejectedIds.push(node.id);
+    } else {
+      nodes.push(node);
+    }
+  });
+
+  rawEdges.forEach((edge) => {
+    if (!rejectedIds.includes(edge.target) && !rejectedIds.includes(edge.source)) {
+      edges.push(edge);
+    }
+  })
+
+  return { nodes, edges }
 }
 
-export const CurrentDataSet = function() {
-    const _nodes = convertToNodes(originalDataStructure);
-    const _edges = convertToEdges(originalDataStructure);
+export const CurrentSimpleDataSet = function() {
+    const graphRef = useRef<GraphCanvasRef | null>(null);
+    const [types, setTypes] = useState<Array<String>>([]);
+    const [layoutType, setLayoutType] = useState<LayoutTypes>('forceDirected2d');
+    
+    const handleAddType = (typeName : String) => {
+      setTypes([...types, typeName]);
+    };
+  
+    const handleRemoveType = (typeName : String) => {
+      setTypes(types.filter((type) => type !== typeName));
+    };
+
+    let { nodes, edges } = convertData(originalDataStructure, types);
+    
+
+    const theme = lightTheme
+    theme.node.activeFill = '#ffbc00';
+    theme.node.label.activeColor = '#ffbc00';
+    theme.ring.activeFill = '#ffbc00';
+    theme.edge.activeFill = '#ffbc00';
+    theme.arrow.activeFill = '#ffbc00';
+    
+    const {
+      selections,
+      actives,
+      onNodeClick,
+      onCanvasClick,
+    } = useSelection({
+      ref: graphRef,
+      nodes,
+      edges,
+      pathSelectionType: 'all'
+    });
+
     
     return (
-      <GraphCanvas
-        nodes={_nodes}
-        edges={_edges}
-        draggable
-        renderNode={({  node, ...rest }) => (
-          <DefaultNode
-            {...rest}
-            node={node}
-            image={ node.icon || '' }
-          />
-        )}
-      />
+      <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+        <div style={{ zIndex: 9, position: 'absolute', top: 15, right: 15, background: 'rgba(0, 0, 0, .5)', padding: 1, color: 'white' }}>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.centerGraph([nodes[0].id])}>Center</button>
+          <br />
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomIn()}>Zoom In</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomOut()}>Zoom Out</button>
+          <br />
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panDown()}>Move Down</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panUp()}>Move Up</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panLeft()}>Move Left</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panRight()}>Move Right</button>
+          <br/>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.downloadImage()}>Download Image</button>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={() => setLayoutType( layoutType === 'hierarchicalTd' ? 'forceDirected2d' : 'hierarchicalTd')}/>
+            Hierarchical view
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Person') : handleRemoveType('Person') }}/>
+            Hide people nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Company') : handleRemoveType('Company') }}/>
+            Hide company nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Division') : handleRemoveType('Division') }}/>
+            Hide division nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Job') : handleRemoveType('Job') }}/>
+            Hide job notes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Location') : handleRemoveType('Location') }}/>
+            Hide location nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Team') : handleRemoveType('Team') }}/>
+            Hide group associations       
+          </label>
+        </div>
+        <GraphCanvas
+          ref={graphRef}
+          theme={ theme }
+          selections={selections}
+          actives={actives}
+          layoutType={layoutType}
+          onCanvasClick={onCanvasClick}
+          onNodeClick={onNodeClick}
+          nodes={nodes}
+          edges={edges}
+          animated={ true }
+          draggable
+          renderNode={({  node, ...rest }) => (
+            <DefaultNode
+              {...rest}
+              node={node}
+              image={ node.icon || '' }
+              borderColor={ node.borderColor }
+              counter= { node.counter }
+            />
+          )}
+        >
+        </GraphCanvas>
+      </div>
     )
-  }
-;
+  };
 
-export const Draggable = () => {
-  const [layout, setLayout] = useState<LayoutTypes>('forceDirected2d');
-  const [nodes, setNodes] = useState(simpleNodes);
+  export const CurrentHugeDataSet = function() {
+    const graphRef = useRef<GraphCanvasRef | null>(null);
+    const [types, setTypes] = useState<Array<String>>([]);
+    const [layoutType, setLayoutType] = useState<LayoutTypes>('forceDirected2d');
+    
+    const handleAddType = (typeName : String) => {
+      setTypes([...types, typeName]);
+    };
+  
+    const handleRemoveType = (typeName : String) => {
+      setTypes(types.filter((type) => type !== typeName));
+    };
 
-  return (
-    <div>
-      <button
-        style={{
-          position: 'absolute',
-          top: 15,
-          right: 15,
-          zIndex: 999,
-          width: 120
-        }}
-        onClick={() =>
-          setNodes([
-            ...nodes,
-            { id: `n-${nodes.length}`, label: `Node ${nodes.length}` }
-          ])
-        }
-      >
-        Update Nodes
-      </button>
-      <button
-        style={{
-          position: 'absolute',
-          top: 40,
-          right: 15,
-          zIndex: 999,
-          width: 120
-        }}
-        onClick={() =>
-          setLayout(
-            layout === 'forceDirected2d' ? 'forceDirected3d' : 'forceDirected2d'
-          )
-        }
-      >
-        Reset Layout
-      </button>
-      <GraphCanvas
-        nodes={nodes}
-        edges={simpleEdges}
-        draggable
-        layoutType={layout}
-      />
-    </div>
-  );
-};
+    let { nodes, edges } = convertData(originalDataStructureHuge, types);
+
+    const theme = lightTheme
+    theme.node.activeFill = '#ffbc00';
+    theme.node.label.activeColor = '#ffbc00';
+    theme.ring.activeFill = '#ffbc00';
+    theme.edge.activeFill = '#ffbc00';
+    theme.arrow.activeFill = '#ffbc00';
+    
+    const {
+      selections,
+      actives,
+      onNodeClick,
+      onCanvasClick,
+    } = useSelection({
+      ref: graphRef,
+      nodes,
+      edges,
+      pathSelectionType: 'all'
+    });
+
+    
+    return (
+      <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+        <div style={{ zIndex: 9, position: 'absolute', top: 15, right: 15, background: 'rgba(0, 0, 0, .5)', padding: 1, color: 'white' }}>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.centerGraph([_nodes[0].id])}>Center</button>
+          <br />
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomIn()}>Zoom In</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomOut()}>Zoom Out</button>
+          <br />
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panDown()}>Move Down</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panUp()}>Move Up</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panLeft()}>Move Left</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panRight()}>Move Right</button>
+          <br/>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.downloadImage()}>Download Image</button>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={() => setLayoutType( layoutType === 'hierarchicalTd' ? 'forceDirected2d' : 'hierarchicalTd')}/>
+            Hierarchical view
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Person') : handleRemoveType('Person') }}/>
+            Hide people nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Company') : handleRemoveType('Company') }}/>
+            Hide company nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Division') : handleRemoveType('Division') }}/>
+            Hide division nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Job') : handleRemoveType('Job') }}/>
+            Hide job notes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Location') : handleRemoveType('Location') }}/>
+            Hide location nodes
+          </label>
+          <br/>
+          <label>
+            <input type="checkbox" onClick={(e) => { e.target.checked ? handleAddType('Team') : handleRemoveType('Team') }}/>
+            Hide group associations       
+          </label>       
+        </div>
+        <GraphCanvas
+          ref={graphRef}
+          theme={ theme }
+          selections={selections}
+          actives={actives}
+          layoutType={layoutType}
+          onCanvasClick={onCanvasClick}
+          onNodeClick={onNodeClick}
+          nodes={nodes}
+          edges={edges}
+          animated={ true }
+          draggable
+          renderNode={({  node, ...rest }) => (
+            <DefaultNode
+              {...rest}
+              node={node}
+              image={ node.icon || '' }
+              borderColor={ node.borderColor }
+              counter= { node.counter }
+            />
+          )}
+        >
+        </GraphCanvas>
+      </div>
+    )
+  };

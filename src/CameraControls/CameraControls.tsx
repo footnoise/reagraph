@@ -260,10 +260,10 @@ export const CameraControls: FC<
         controls: cameraRef.current,
         zoomIn: () => zoomIn(),
         zoomOut: () => zoomOut(),
-        panLeft: () => panLeft({ deltaTime: 1 }),
-        panRight: () => panRight({ deltaTime: 1 }),
-        panDown: () => panDown({ deltaTime: 1 }),
-        panUp: () => panUp({ deltaTime: 1 }),
+        panLeft: () => panLeft({ deltaTime: 100 }), //TODO: Submit PR with bugfix
+        panRight: () => panRight({ deltaTime: 100 }), //TODO: Submit PR with bugfix
+        panDown: () => panDown({ deltaTime: 100 }), //TODO: Submit PR with bugfix
+        panUp: () => panUp({ deltaTime: 100 }), //TODO: Submit PR with bugfix
         resetControls: (animated?: boolean) =>
           cameraRef.current?.reset(animated)
       }),

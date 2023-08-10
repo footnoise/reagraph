@@ -217,6 +217,12 @@ export const Node: FC<NodeProps> = ({
     }
   });
 
+  const onDoubleClick = node => {
+    if (['Person', 'Team'].includes(node.type) && node.url) {
+      window.location.href = node.url;
+    }
+  };
+
   return (
     <a.group
       userData={{ id, type: 'node' }}
@@ -224,6 +230,9 @@ export const Node: FC<NodeProps> = ({
       position={nodePosition as any}
       onPointerOver={pointerOver}
       onPointerOut={pointerOut}
+      onDoubleClick={() => {
+        onDoubleClick(node);
+      }}
       onClick={() => {
         if (!disabled && !isDragging) {
           onClick?.(node, {
@@ -282,7 +291,7 @@ export const Node: FC<NodeProps> = ({
       )}
       <Ring
         opacity={isSelected ? 0.5 : 0}
-        size={nodeSize}
+        size={nodeSize - 5}
         animated={animated}
         color={isSelected || active ? theme.ring.activeFill : theme.ring.fill}
       />
@@ -298,20 +307,37 @@ export const Node: FC<NodeProps> = ({
         </Html>
       )}
       {(labelVisible || isSelected || active) && label && (
-        <a.group position={labelPosition as any}>
-          <Label
-            text={label}
-            fontUrl={labelFontUrl}
-            opacity={selectionOpacity}
-            stroke={theme.node.label.stroke}
-            active={isSelected || active || isDragging || isActive}
-            color={
-              isSelected || active || isDragging || isActive
-                ? theme.node.label.activeColor
-                : theme.node.label.color
-            }
-          />
-        </a.group>
+        <>
+          <a.group position={labelPosition as any}>
+            <Label
+              text={label}
+              fontUrl={labelFontUrl}
+              opacity={selectionOpacity}
+              stroke={theme.node.label.stroke}
+              active={isSelected || active || isDragging || isActive}
+              color={
+                isSelected || active || isDragging || isActive
+                  ? theme.node.label.activeColor
+                  : theme.node.label.color
+              }
+            />
+          </a.group>
+          {/* TODO: make is as subText property */}
+          <a.group position={[0, -(nodeSize + 15), 2] as any}>
+            <Label
+              text={node.type}
+              fontUrl={labelFontUrl}
+              opacity={selectionOpacity}
+              stroke={theme.node.label.stroke}
+              active={isSelected || active || isDragging || isActive}
+              color={
+                isSelected || active || isDragging || isActive
+                  ? theme.node.label.activeColor
+                  : theme.node.label.color
+              }
+            />
+          </a.group>
+        </>
       )}
     </a.group>
   );

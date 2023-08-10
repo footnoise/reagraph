@@ -22,6 +22,7 @@
       "color": "#1BC363",
       "width": 2
     },
+    "url" : "https://www.google.com",
     "size": 3,
     "halos": [
       {
@@ -307,6 +308,7 @@
   "team-1": {
     "id": "team-1",
     "type": "node",
+    "counter" : "25",
     "label": {
       "text": "Team 1",
       "backgroundColor": "rgba(255, 255, 255, 0.7)",
@@ -359,6 +361,7 @@
   "team-2": {
     "id": "team-2",
     "type": "node",
+    "counter" : "100K+",
     "label": {
       "text": "Team 2",
       "backgroundColor": "rgba(255, 255, 255, 0.7)",
@@ -411,6 +414,7 @@
   "team-6": {
     "id": "team-6",
     "type": "node",
+    "counter" : "2",
     "label": {
       "text": "Team 6",
       "backgroundColor": "rgba(255, 255, 255, 0.7)",
