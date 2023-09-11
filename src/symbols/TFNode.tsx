@@ -12,7 +12,7 @@ import { useSpring, a } from '@react-spring/three';
 import { Sphere } from './nodes/Sphere';
 import { Label } from './Label';
 import { Theme } from '../themes';
-import { Ring } from './Ring';
+import { TFRing } from './TFRing';
 import {
   NodeContextMenuProps,
   ContextMenuEvent,
@@ -26,78 +26,9 @@ import { useStore } from '../store';
 import { useDrag } from '../utils/useDrag';
 import { Icon } from './nodes';
 import { useHoverIntent } from '../utils/useHoverIntent';
+import { NodeProps } from './Node';
 
-export interface NodeProps {
-  /**
-   * The unique identifier for the node.
-   */
-  id: string;
-
-  /**
-   * The parent nodes of the node.
-   */
-  parents?: string[];
-
-  /**
-   * Whether the node is disabled.
-   */
-  disabled?: boolean;
-
-  /**
-   * Whether the node is animated.
-   */
-  animated?: boolean;
-
-  /**
-   * Whether the node is draggable.
-   */
-  draggable?: boolean;
-
-  /**
-   * The url for the label font.
-   */
-  labelFontUrl?: string;
-
-  /**
-   * The function to use to render the node.
-   */
-  renderNode?: NodeRenderer;
-
-  /**
-   * The context menu for the node.
-   */
-  contextMenu?: (event: ContextMenuEvent) => ReactNode;
-
-  /**
-   * The function to call when the pointer is over the node.
-   */
-  onPointerOver?: (node: InternalGraphNode) => void;
-
-  /**
-   * The function to call when the pointer is out of the node.
-   */
-  onPointerOut?: (node: InternalGraphNode) => void;
-
-  /**
-   * The function to call when the node is clicked.
-   */
-  onClick?: (node: InternalGraphNode, props?: CollapseProps) => void;
-
-  /**
-   * The function to call when the node is right clicked.
-   */
-  onContextMenu?: (
-    node?: InternalGraphNode,
-    props?: NodeContextMenuProps
-  ) => void;
-
-  /**
-   * Triggered after a node was dragged.
-   */
-  onDragged?: (node: InternalGraphNode) => void;
-}
-
-export const Node: FC<NodeProps> = ({
+export const TFNode: FC<NodeProps> = ({
   animated,
   disabled,
   id,
@@ -217,6 +148,12 @@ export const Node: FC<NodeProps> = ({
     }
   });
 
+  const onDoubleClick = node => {
+    if (['Person', 'Team'].includes(node.type) && node.url) {
+      window.location.href = node.url;
+    }
+  };
+
   return (
     <a.group
       userData={{ id, type: 'node' }}
@@ -224,6 +161,9 @@ export const Node: FC<NodeProps> = ({
       position={nodePosition as any}
       onPointerOver={pointerOver}
       onPointerOut={pointerOut}
+      onDoubleClick={() => {
+        onDoubleClick(node);
+      }}
       onClick={() => {
         if (!disabled && !isDragging) {
           onClick?.(node, {
@@ -280,9 +220,9 @@ export const Node: FC<NodeProps> = ({
           )}
         </>
       )}
-      <Ring
+      <TFRing
         opacity={isSelected ? 0.5 : 0}
-        size={nodeSize}
+        size={nodeSize - 5}
         animated={animated}
         color={isSelected || active ? theme.ring.activeFill : theme.ring.fill}
       />
@@ -298,25 +238,42 @@ export const Node: FC<NodeProps> = ({
         </Html>
       )}
       {(labelVisible || isSelected || active) && label && (
-        <a.group position={labelPosition as any}>
-          <Label
-            text={label}
-            fontUrl={labelFontUrl}
-            opacity={selectionOpacity}
-            stroke={theme.node.label.stroke}
-            active={isSelected || active || isDragging || isActive}
-            color={
-              isSelected || active || isDragging || isActive
-                ? theme.node.label.activeColor
-                : theme.node.label.color
-            }
-          />
-        </a.group>
+        <>
+          <a.group position={labelPosition as any}>
+            <Label
+              text={label}
+              fontUrl={labelFontUrl}
+              opacity={selectionOpacity}
+              stroke={theme.node.label.stroke}
+              active={isSelected || active || isDragging || isActive}
+              color={
+                isSelected || active || isDragging || isActive
+                  ? theme.node.label.activeColor
+                  : theme.node.label.color
+              }
+            />
+          </a.group>
+          {/* TODO: make is as subText property */}
+          <a.group position={[0, -(nodeSize + 15), 2] as any}>
+            <Label
+              text={node.type}
+              fontUrl={labelFontUrl}
+              opacity={selectionOpacity}
+              stroke={theme.node.label.stroke}
+              active={isSelected || active || isDragging || isActive}
+              color={
+                isSelected || active || isDragging || isActive
+                  ? theme.node.label.activeColor
+                  : theme.node.label.color
+              }
+            />
+          </a.group>
+        </>
       )}
     </a.group>
   );
 };
 
-Node.defaultProps = {
+TFNode.defaultProps = {
   draggable: false
 };

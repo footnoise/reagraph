@@ -4,11 +4,11 @@ import { animationConfig } from '../../utils/animation';
 import { Color, DoubleSide } from 'three';
 import { NodeRendererProps } from '../../types';
 
-export interface SphereWithBorderProps extends NodeRendererProps {
+export interface TFSphereWithBorderProps extends NodeRendererProps {
   borderColor: string;
 }
 
-export const SphereWithBorder: FC<SphereWithBorderProps> = ({
+export const TFSphereWithBorder: FC<TFSphereWithBorderProps> = ({
   color,
   borderColor,
   id,
@@ -58,7 +58,7 @@ export const SphereWithBorder: FC<SphereWithBorderProps> = ({
   );
 };
 
-SphereWithBorder.defaultProps = {
+TFSphereWithBorder.defaultProps = {
   opacity: 1,
   active: false
 };

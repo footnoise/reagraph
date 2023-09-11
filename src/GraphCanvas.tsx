@@ -117,15 +117,7 @@ export const GraphCanvas: FC<GraphCanvasProps & { ref?: Ref<GraphCanvasRef> }> =
         resetControls: (animated?: boolean) =>
           controlsRef.current?.resetControls(animated),
         getControls: () => controlsRef.current?.controls,
-        getGraph: () => rendererRef.current?.graph,
-        downloadImage: () => {
-          const url = controlsRef.current?.controls?._domElement?.toDataURL();
-          const fakeDownloader = document.createElement('a');
-          fakeDownloader.href = url;
-          fakeDownloader.download = 'canvas';
-          fakeDownloader.click();
-          fakeDownloader.remove();
-        }
+        getGraph: () => rendererRef.current?.graph
       }));
 
       // Defaults to pass to the store
@@ -143,7 +135,7 @@ export const GraphCanvas: FC<GraphCanvasProps & { ref?: Ref<GraphCanvasRef> }> =
             legacy
             linear
             flat
-            gl={{ preserveDrawingBuffer: true, ...GL_DEFAULTS }}
+            gl={GL_DEFAULTS}
             camera={CAMERA_DEFAULTS}
             onPointerMissed={onCanvasClick}
           >

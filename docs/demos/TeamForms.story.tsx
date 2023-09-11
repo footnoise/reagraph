@@ -1,7 +1,7 @@
 import { range } from 'd3-array';
 import React, { useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { GraphCanvas, GraphCanvasRef, Svg, LayoutTypes, SphereWithIcon, SphereWithSvg, DefaultNode, useSelection, lightTheme } from '../../src';
+import { TFGraphCanvas, GraphCanvasRef, Svg, LayoutTypes, SphereWithIcon, SphereWithSvg, TFCustomNode, useSelection, lightTheme } from '../../src';
 import {
   iconNodes,
   manyNodes,
@@ -24,7 +24,7 @@ import { normalizeStory } from '@storybook/preview-api';
 
 export default {
   title: 'Demos/TeamForms',
-  component: GraphCanvas
+  component: TFGraphCanvas
 };
 
 const ICONS_MAPPING = {
@@ -177,7 +177,7 @@ export const CurrentSimpleDataSet = function() {
             Hide group associations       
           </label>
         </div>
-        <GraphCanvas
+        <TFGraphCanvas
           ref={graphRef}
           theme={ theme }
           selections={selections}
@@ -190,7 +190,7 @@ export const CurrentSimpleDataSet = function() {
           animated={ true }
           draggable
           renderNode={({  node, ...rest }) => (
-            <DefaultNode
+            <TFCustomNode
               {...rest}
               node={node}
               image={ node.icon || '' }
@@ -199,7 +199,7 @@ export const CurrentSimpleDataSet = function() {
             />
           )}
         >
-        </GraphCanvas>
+        </TFGraphCanvas>
       </div>
     )
   };
@@ -289,7 +289,7 @@ export const CurrentSimpleDataSet = function() {
             Hide group associations       
           </label>       
         </div>
-        <GraphCanvas
+        <TFGraphCanvas
           ref={graphRef}
           theme={ theme }
           selections={selections}
@@ -302,7 +302,7 @@ export const CurrentSimpleDataSet = function() {
           animated={ true }
           draggable
           renderNode={({  node, ...rest }) => (
-            <DefaultNode
+            <TFCustomNode
               {...rest}
               node={node}
               image={ node.icon || '' }
@@ -311,7 +311,7 @@ export const CurrentSimpleDataSet = function() {
             />
           )}
         >
-        </GraphCanvas>
+        </TFGraphCanvas>
       </div>
     )
   };

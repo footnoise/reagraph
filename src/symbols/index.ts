@@ -7,3 +7,5 @@ export * from './edges';
 export * from './nodes';
 export * from './Ring';
 export * from './Cluster';
+export * from './TFNode';
+export * from './TFRing';

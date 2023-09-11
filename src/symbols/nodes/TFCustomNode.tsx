@@ -1,20 +1,17 @@
 import React, { FC } from 'react';
 import { SphereWithIconProps } from './SphereWithIcon';
-import { SphereWithBorder } from './SphereWithBorder';
+import { TFSphereWithBorder } from './TFSphereWithBorder';
 import { Icon } from './Icon';
-import { Ring } from '../Ring';
 import { Label } from '../Label';
-import { DoubleSide } from 'three';
-import { useSpring, a } from '@react-spring/three';
+import { a } from '@react-spring/three';
 import { RoundedBox } from '@react-three/drei';
-import { counter } from '@fortawesome/fontawesome-svg-core';
 
-export interface DefaultNodeProps extends SphereWithIconProps {
+export interface TFCustomNodeProps extends SphereWithIconProps {
   borderColor: string;
   counter: string;
 }
 
-export const DefaultNode: FC<DefaultNodeProps> = ({
+export const TFCustomNode: FC<TFCustomNodeProps> = ({
   color,
   borderColor,
   id,
@@ -28,7 +25,7 @@ export const DefaultNode: FC<DefaultNodeProps> = ({
 }) => {
   return (
     <>
-      <SphereWithBorder
+      <TFSphereWithBorder
         id={id}
         size={size}
         opacity={opacity}
@@ -60,7 +57,7 @@ export const DefaultNode: FC<DefaultNodeProps> = ({
   );
 };
 
-DefaultNode.defaultProps = {
+TFCustomNode.defaultProps = {
   opacity: 1,
   active: false,
   selected: false

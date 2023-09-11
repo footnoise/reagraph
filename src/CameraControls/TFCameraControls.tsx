@@ -6,55 +6,16 @@ import React, {
   forwardRef,
   Ref,
   useImperativeHandle,
-  useMemo,
-  ReactNode
+  useMemo
 } from 'react';
 import { useThree, useFrame, extend } from '@react-three/fiber';
-import {
-  MOUSE,
-  Vector2,
-  Vector3,
-  Vector4,
-  Quaternion,
-  Matrix4,
-  Spherical,
-  Box3,
-  Sphere,
-  Raycaster,
-  MathUtils
-} from 'three';
+import { MathUtils } from 'three';
 import ThreeCameraControls from 'camera-controls';
-import {
-  CameraControlsContext,
-  CameraControlsContextProps
-} from './useCameraControls';
+import { CameraControlsContext } from './useCameraControls';
+import { CameraControlsProps, CameraControlsRef } from './CameraControls';
 import { useHotkeys } from 'reakeys';
 import * as holdEvent from 'hold-event';
 import { useStore } from '../store';
-
-// Install the camera controls
-// Use a subset for better three shaking
-ThreeCameraControls.install({
-  THREE: {
-    MOUSE: MOUSE,
-    Vector2: Vector2,
-    Vector3: Vector3,
-    Vector4: Vector4,
-    Quaternion: Quaternion,
-    Matrix4: Matrix4,
-    Spherical: Spherical,
-    Box3: Box3,
-    Sphere: Sphere,
-    Raycaster: Raycaster,
-    MathUtils: {
-      DEG2RAD: MathUtils?.DEG2RAD,
-      clamp: MathUtils?.clamp
-    }
-  }
-});
-
-// Extend r3f with the new controls
-extend({ ThreeCameraControls });
 
 const KEY_CODES = {
   ARROW_LEFT: 37,
@@ -68,33 +29,7 @@ const rightKey = new holdEvent.KeyboardKeyHold(KEY_CODES.ARROW_RIGHT, 100);
 const upKey = new holdEvent.KeyboardKeyHold(KEY_CODES.ARROW_UP, 100);
 const downKey = new holdEvent.KeyboardKeyHold(KEY_CODES.ARROW_DOWN, 100);
 
-export type CameraMode = 'pan' | 'rotate' | 'orbit';
-
-export interface CameraControlsProps {
-  /**
-   * Mode of the camera.
-   */
-  mode?: CameraMode;
-
-  /**
-   * Children symbols.
-   */
-  children?: ReactNode;
-
-  /**
-   * Animate transitions to centering.
-   */
-  animated?: boolean;
-
-  /**
-   * Disable the controls.
-   */
-  disabled?: boolean;
-}
-
-export type CameraControlsRef = CameraControlsContextProps;
-
-export const CameraControls: FC<
+export const TFCameraControls: FC<
   CameraControlsProps & { ref?: Ref<CameraControlsRef> }
 > = forwardRef(
   ({ mode, children, animated, disabled }, ref: Ref<CameraControlsRef>) => {
@@ -260,10 +195,10 @@ export const CameraControls: FC<
         controls: cameraRef.current,
         zoomIn: () => zoomIn(),
         zoomOut: () => zoomOut(),
-        panLeft: () => panLeft({ deltaTime: 1 }),
-        panRight: () => panRight({ deltaTime: 1 }),
-        panDown: () => panDown({ deltaTime: 1 }),
-        panUp: () => panUp({ deltaTime: 1 }),
+        panLeft: () => panLeft({ deltaTime: 100 }), //TODO: Submit PR with bugfix
+        panRight: () => panRight({ deltaTime: 100 }), //TODO: Submit PR with bugfix
+        panDown: () => panDown({ deltaTime: 100 }), //TODO: Submit PR with bugfix
+        panUp: () => panUp({ deltaTime: 100 }), //TODO: Submit PR with bugfix
         resetControls: (animated?: boolean) =>
           cameraRef.current?.reset(animated)
       }),
@@ -289,6 +224,6 @@ export const CameraControls: FC<
   }
 );
 
-CameraControls.defaultProps = {
+TFCameraControls.defaultProps = {
   mode: 'rotate'
 };
