@@ -1,14 +1,5 @@
-import { range } from 'd3-array';
 import React, { useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { TFGraphCanvas, GraphCanvasRef, Svg, LayoutTypes, SphereWithIcon, SphereWithSvg, TFCustomNode, useSelection, lightTheme } from '../../src';
-import {
-  iconNodes,
-  manyNodes,
-  simpleEdges,
-  simpleNodes,
-  simpleNodesColors
-} from '../assets/demo';
+import { GraphCanvas, GraphCanvasRef, Svg, LayoutTypes, TFCustomNode, useSelection, lightTheme } from '../../src';
 
 //import { faUser, faCoffee } from '@fortawesome/free-solid-svg-icons'
 import faUser from '../assets/fa-icons/fa-user.svg';
@@ -20,11 +11,10 @@ import faMapMarkerAlt from '../assets/fa-icons/fa-map-marker-alt.svg';
 import originalDataStructure from '../assets/original-data-structure.json';
 import originalDataStructureHuge from '../assets/original-data-structure-huge.json';
 import _ from 'lodash';
-import { normalizeStory } from '@storybook/preview-api';
 
 export default {
   title: 'Demos/TeamForms',
-  component: TFGraphCanvas
+  component: GraphCanvas
 };
 
 const ICONS_MAPPING = {
@@ -111,6 +101,7 @@ export const CurrentSimpleDataSet = function() {
     theme.node.activeFill = '#ffbc00';
     theme.node.label.activeColor = '#ffbc00';
     theme.ring.activeFill = '#ffbc00';
+    theme.ring.defaultGeometry = [4, 7, 25];
     theme.edge.activeFill = '#ffbc00';
     theme.arrow.activeFill = '#ffbc00';
     
@@ -126,7 +117,15 @@ export const CurrentSimpleDataSet = function() {
       pathSelectionType: 'all'
     });
 
-    
+    const downloadImage = () => {
+      const url = graphRef.getControls()._domElement?.toDataURL();
+      const fakeDownloader = document.createElement('a');
+      fakeDownloader.href = url;
+      fakeDownloader.download = 'canvas';
+      fakeDownloader.click();
+      fakeDownloader.remove();
+    }
+
     return (
       <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
         <div style={{ zIndex: 9, position: 'absolute', top: 15, right: 15, background: 'rgba(0, 0, 0, .5)', padding: 1, color: 'white' }}>
@@ -135,12 +134,12 @@ export const CurrentSimpleDataSet = function() {
           <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomIn()}>Zoom In</button>
           <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomOut()}>Zoom Out</button>
           <br />
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panDown()}>Move Down</button>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panUp()}>Move Up</button>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panLeft()}>Move Left</button>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panRight()}>Move Right</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panDown(100)}>Move Down</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panUp(100)}>Move Up</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panLeft(100)}>Move Left</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panRight(100)}>Move Right</button>
           <br/>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.downloadImage()}>Download Image</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => downloadImage()}>Download Image</button>
           <br/>
           <label>
             <input type="checkbox" onClick={() => setLayoutType( layoutType === 'hierarchicalTd' ? 'forceDirected2d' : 'hierarchicalTd')}/>
@@ -177,14 +176,16 @@ export const CurrentSimpleDataSet = function() {
             Hide group associations       
           </label>
         </div>
-        <TFGraphCanvas
+        <GraphCanvas
           ref={graphRef}
           theme={ theme }
+          glOptions={{preserveDrawingBuffer: true}}
           selections={selections}
           actives={actives}
           layoutType={layoutType}
           onCanvasClick={onCanvasClick}
           onNodeClick={onNodeClick}
+          onNodeDoubleClick={(node) => alert(node.label)}
           nodes={nodes}
           edges={edges}
           animated={ true }
@@ -199,7 +200,7 @@ export const CurrentSimpleDataSet = function() {
             />
           )}
         >
-        </TFGraphCanvas>
+        </GraphCanvas>
       </div>
     )
   };
@@ -223,6 +224,7 @@ export const CurrentSimpleDataSet = function() {
     theme.node.activeFill = '#ffbc00';
     theme.node.label.activeColor = '#ffbc00';
     theme.ring.activeFill = '#ffbc00';
+    theme.ring.defaultGeometry = [4, 7, 25];
     theme.edge.activeFill = '#ffbc00';
     theme.arrow.activeFill = '#ffbc00';
     
@@ -237,7 +239,15 @@ export const CurrentSimpleDataSet = function() {
       edges,
       pathSelectionType: 'all'
     });
-
+    
+    const downloadImage = () => {
+      const url = graphRef.getControls()._domElement?.toDataURL();
+      const fakeDownloader = document.createElement('a');
+      fakeDownloader.href = url;
+      fakeDownloader.download = 'canvas';
+      fakeDownloader.click();
+      fakeDownloader.remove();
+    }
     
     return (
       <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
@@ -247,12 +257,12 @@ export const CurrentSimpleDataSet = function() {
           <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomIn()}>Zoom In</button>
           <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomOut()}>Zoom Out</button>
           <br />
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panDown()}>Move Down</button>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panUp()}>Move Up</button>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panLeft()}>Move Left</button>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panRight()}>Move Right</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panDown(100)}>Move Down</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panUp(100)}>Move Up</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panLeft(100)}>Move Left</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.panRight(100)}>Move Right</button>
           <br/>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.downloadImage()}>Download Image</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => downloadImage()}>Download Image</button>
           <br/>
           <label>
             <input type="checkbox" onClick={() => setLayoutType( layoutType === 'hierarchicalTd' ? 'forceDirected2d' : 'hierarchicalTd')}/>
@@ -289,14 +299,16 @@ export const CurrentSimpleDataSet = function() {
             Hide group associations       
           </label>       
         </div>
-        <TFGraphCanvas
+        <GraphCanvas
           ref={graphRef}
           theme={ theme }
+          glOptions={{preserveDrawingBuffer: true}}
           selections={selections}
           actives={actives}
           layoutType={layoutType}
           onCanvasClick={onCanvasClick}
           onNodeClick={onNodeClick}
+          onNodeDoubleClick={(node) => alert(node.label)}
           nodes={nodes}
           edges={edges}
           animated={ true }
@@ -311,7 +323,7 @@ export const CurrentSimpleDataSet = function() {
             />
           )}
         >
-        </TFGraphCanvas>
+        </GraphCanvas>
       </div>
     )
   };

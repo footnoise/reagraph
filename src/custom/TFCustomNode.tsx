@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { SphereWithIconProps } from './SphereWithIcon';
+import { SphereWithIconProps } from '../symbols/nodes/SphereWithIcon';
 import { TFSphereWithBorder } from './TFSphereWithBorder';
-import { Icon } from './Icon';
-import { Label } from '../Label';
+import { Icon } from '../symbols/nodes/Icon';
+import { Label } from '../symbols/Label';
 import { a } from '@react-spring/three';
 import { RoundedBox } from '@react-three/drei';
 
