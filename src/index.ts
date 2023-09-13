@@ -11,3 +11,4 @@ export * from './RadialMenu';
 export * from './CameraControls';
 export * from './useGraph';
 export * from './themes';
+export * from './custom';
