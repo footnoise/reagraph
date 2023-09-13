@@ -1,0 +1,623 @@
+{
+  "person-1": {
+    "id": "person-1",
+    "type": "node",
+    "label": {
+      "text": "Person 1",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 2,
+      "type": "Person"
+    },
+    "fontIcon": {
+      "text": "fa-user",
+      "color": "#0f6936"
+    },
+    "color": "#8fe8b5",
+    "border": {
+      "color": "#1BC363",
+      "width": 2
+    },
+    "url" : "https://www.google.com",
+    "size": 3,
+    "halos": [
+      {
+        "color": "rgba(255, 204, 0, 0.5)",
+        "radius": 30,
+        "width": 20
+      }
+    ]
+  },
+  "person-2": {
+    "id": "person-2",
+    "type": "node",
+    "label": {
+      "text": "Person 2",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 1,
+      "type": "Person"
+    },
+    "fontIcon": {
+      "text": "fa-user",
+      "color": "#0f6936"
+    },
+    "color": "#8fe8b5",
+    "border": {
+      "color": "#1BC363",
+      "width": 2
+    },
+    "size": 3
+  },
+  "person-3": {
+    "id": "person-3",
+    "type": "node",
+    "label": {
+      "text": "Person 3",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 1,
+      "type": "Person"
+    },
+    "fontIcon": {
+      "text": "fa-user",
+      "color": "#0f6936"
+    },
+    "color": "#8fe8b5",
+    "border": {
+      "color": "#1BC363",
+      "width": 2
+    },
+    "size": 3
+  },
+  "person-4": {
+    "id": "person-4",
+    "type": "node",
+    "label": {
+      "text": "Person 4",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 1,
+      "type": "Person"
+    },
+    "fontIcon": {
+      "text": "fa-user",
+      "color": "#0f6936"
+    },
+    "color": "#8fe8b5",
+    "border": {
+      "color": "#1BC363",
+      "width": 2
+    },
+    "size": 3
+  },
+  "person-4-person-3": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-4-person-3",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-3",
+    "id2": "person-4",
+    "relationshipType": "MANAGING"
+  },
+  "person-3-person-2": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-3-person-2",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-2",
+    "id2": "person-3",
+    "relationshipType": "MANAGING"
+  },
+  "person-2-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-2-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "person-2",
+    "relationshipType": "MANAGING"
+  },
+  "person-1-division-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-1-division-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "division-1",
+    "relationshipType": "DIVISION_IN"
+  },
+  "person-1-company-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-1-company-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "company-1",
+    "relationshipType": "COMPANY_IN"
+  },
+  "person-1-Product Owner": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-1-Product Owner",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "Product Owner",
+    "relationshipType": "EMPLOYED_AS"
+  },
+  "person-1-location-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "person-1-location-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "location-1",
+    "relationshipType": "LOCATED_AT"
+  },
+  "division-1": {
+    "id": "division-1",
+    "type": "node",
+    "label": {
+      "text": "Business Product Development",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 5,
+      "type": "Division"
+    },
+    "fontIcon": {
+      "text": "fa-chart-pie",
+      "color": "#0071b7"
+    },
+    "color": "#d1edff",
+    "border": {
+      "color": "#0091EA",
+      "width": 2
+    },
+    "size": 3
+  },
+  "company-1": {
+    "id": "company-1",
+    "type": "node",
+    "label": {
+      "text": "Company 1",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 4,
+      "type": "Company"
+    },
+    "fontIcon": {
+      "text": "fa-building",
+      "color": "#00426a"
+    },
+    "color": "#9edaff",
+    "border": {
+      "color": "#0071b7",
+      "width": 2
+    },
+    "size": 3
+  },
+  "location-1": {
+    "id": "location-1",
+    "type": "node",
+    "label": {
+      "text": "Leve 1, Location 1, Suburb",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 7,
+      "type": "Location"
+    },
+    "fontIcon": {
+      "text": "fa-map-marker-alt",
+      "color": "#d69e00"
+    },
+    "color": "#ffe499",
+    "border": {
+      "color": "#ffbc00",
+      "width": 2
+    },
+    "size": 3
+  },
+  "Product Owner": {
+    "id": "Product Owner",
+    "type": "node",
+    "label": {
+      "text": "Product Owner",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 6,
+      "type": "Job"
+    },
+    "fontIcon": {
+      "text": "fa-address-card",
+      "color": "#a21122"
+    },
+    "color": "#f8bac1",
+    "border": {
+      "color": "#EC465A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-1": {
+    "id": "team-1",
+    "type": "node",
+    "counter" : "25",
+    "label": {
+      "text": "Team 1",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 3,
+      "type": "Team"
+    },
+    "glyphs": [
+      {
+        "color": "#3fd781",
+        "border": {
+          "color": "#15964c"
+        },
+        "angle": 45,
+        "size": 1.5,
+        "label": {
+          "text": "9"
+        }
+      }
+    ],
+    "fontIcon": {
+      "text": "fa-users",
+      "color": "#2d3031"
+    },
+    "color": "#e0e2e3",
+    "border": {
+      "color": "#90979A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-1-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "team-1-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "team-1",
+    "relationshipType": "MANAGING"
+  },
+  "team-2": {
+    "id": "team-2",
+    "type": "node",
+    "counter" : "100K+",
+    "label": {
+      "text": "Team 2",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 3,
+      "type": "Team"
+    },
+    "glyphs": [
+      {
+        "color": "#3fd781",
+        "border": {
+          "color": "#15964c"
+        },
+        "angle": 45,
+        "size": 1.5,
+        "label": {
+          "text": "182"
+        }
+      }
+    ],
+    "fontIcon": {
+      "text": "fa-users",
+      "color": "#2d3031"
+    },
+    "color": "#e0e2e3",
+    "border": {
+      "color": "#90979A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-2-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "team-2-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "team-2",
+    "relationshipType": "MANAGING"
+  },
+  "team-6": {
+    "id": "team-6",
+    "type": "node",
+    "counter" : "2",
+    "label": {
+      "text": "Team 6",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 3,
+      "type": "Team"
+    },
+    "glyphs": [
+      {
+        "color": "#3fd781",
+        "border": {
+          "color": "#15964c"
+        },
+        "angle": 45,
+        "size": 1.5,
+        "label": {
+          "text": "214"
+        }
+      }
+    ],
+    "fontIcon": {
+      "text": "fa-users",
+      "color": "#2d3031"
+    },
+    "color": "#e0e2e3",
+    "border": {
+      "color": "#90979A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-6-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "team-6-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "team-6",
+    "relationshipType": "MANAGING"
+  },
+  "team-3": {
+    "id": "team-3",
+    "type": "node",
+    "label": {
+      "text": "Team 3",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 3,
+      "type": "Team"
+    },
+    "glyphs": [
+      {
+        "color": "#3fd781",
+        "border": {
+          "color": "#15964c"
+        },
+        "angle": 45,
+        "size": 1.5,
+        "label": {
+          "text": "3"
+        }
+      }
+    ],
+    "fontIcon": {
+      "text": "fa-users",
+      "color": "#2d3031"
+    },
+    "color": "#e0e2e3",
+    "border": {
+      "color": "#90979A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-3-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "team-3-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "team-3",
+    "relationshipType": "MANAGING"
+  },
+  "team-4": {
+    "id": "team-4",
+    "type": "node",
+    "label": {
+      "text": "Team 4",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 3,
+      "type": "Team"
+    },
+    "glyphs": [
+      {
+        "color": "#3fd781",
+        "border": {
+          "color": "#15964c"
+        },
+        "angle": 45,
+        "size": 1.5,
+        "label": {
+          "text": "2"
+        }
+      }
+    ],
+    "fontIcon": {
+      "text": "fa-users",
+      "color": "#2d3031"
+    },
+    "color": "#e0e2e3",
+    "border": {
+      "color": "#90979A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-4-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "team-4-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "team-4",
+    "relationshipType": "MANAGING"
+  },
+  "team-5": {
+    "id": "team-5",
+    "type": "node",
+    "label": {
+      "text": "Team 5",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "fontSize": 14,
+      "center": false
+    },
+    "data": {
+      "collapsed": false,
+      "level": 3,
+      "type": "Team"
+    },
+    "glyphs": [
+      {
+        "color": "#3fd781",
+        "border": {
+          "color": "#15964c"
+        },
+        "angle": 45,
+        "size": 1.5,
+        "label": {
+          "text": "316"
+        }
+      }
+    ],
+    "fontIcon": {
+      "text": "fa-users",
+      "color": "#2d3031"
+    },
+    "color": "#e0e2e3",
+    "border": {
+      "color": "#90979A",
+      "width": 2
+    },
+    "size": 3
+  },
+  "team-5-person-1": {
+    "color": "#c5c9cb",
+    "label": {
+      "backgroundColor": "rgba(255, 255, 255, 0.7)"
+    },
+    "id": "team-5-person-1",
+    "type": "link",
+    "end1": {
+      "arrow": true
+    },
+    "id1": "person-1",
+    "id2": "team-5",
+    "relationshipType": "MANAGING"
+  }
+}
