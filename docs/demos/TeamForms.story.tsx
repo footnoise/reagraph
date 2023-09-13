@@ -101,6 +101,7 @@ export const CurrentSimpleDataSet = function() {
     theme.node.activeFill = '#ffbc00';
     theme.node.label.activeColor = '#ffbc00';
     theme.ring.activeFill = '#ffbc00';
+    theme.ring.defaultGeometry = [4, 7, 25];
     theme.edge.activeFill = '#ffbc00';
     theme.arrow.activeFill = '#ffbc00';
     
@@ -178,11 +179,13 @@ export const CurrentSimpleDataSet = function() {
         <GraphCanvas
           ref={graphRef}
           theme={ theme }
+          glOptions={{preserveDrawingBuffer: true}}
           selections={selections}
           actives={actives}
           layoutType={layoutType}
           onCanvasClick={onCanvasClick}
           onNodeClick={onNodeClick}
+          onNodeDoubleClick={(node) => { alert(node.label)}}
           nodes={nodes}
           edges={edges}
           animated={ true }
@@ -238,7 +241,7 @@ export const CurrentSimpleDataSet = function() {
     });
     
     const downloadImage = () => {
-      const url = graphRef.getControls()._domElement?.toDataURL();
+      const url = graphRef.current?.getControls()._domElement?.toDataURL();
       const fakeDownloader = document.createElement('a');
       fakeDownloader.href = url;
       fakeDownloader.download = 'canvas';
@@ -249,7 +252,7 @@ export const CurrentSimpleDataSet = function() {
     return (
       <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
         <div style={{ zIndex: 9, position: 'absolute', top: 15, right: 15, background: 'rgba(0, 0, 0, .5)', padding: 1, color: 'white' }}>
-          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.centerGraph([_nodes[0].id])}>Center</button>
+          <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.centerGraph([nodes[0].id])}>Center</button>
           <br />
           <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomIn()}>Zoom In</button>
           <button style={{ display: 'block', width: '100%' }} onClick={() => graphRef.current?.zoomOut()}>Zoom Out</button>
