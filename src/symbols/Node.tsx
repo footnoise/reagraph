@@ -84,6 +84,11 @@ export interface NodeProps {
   onClick?: (node: InternalGraphNode, props?: CollapseProps) => void;
 
   /**
+   * The function to call when the node is double clicked.
+   */
+  onDoubleClick?: (node: InternalGraphNode) => void;
+
+  /**
    * The function to call when the node is right clicked.
    */
   onContextMenu?: (
@@ -105,6 +110,7 @@ export const Node: FC<NodeProps> = ({
   labelFontUrl,
   contextMenu,
   onClick,
+  onDoubleClick,
   onPointerOver,
   onDragged,
   onPointerOut,
@@ -126,7 +132,13 @@ export const Node: FC<NodeProps> = ({
   const hasSelections = useStore(state => state.selections?.length > 0);
 
   const isDragging = draggingId === id;
-  const { position, label, size: nodeSize = 7, labelVisible = true } = node;
+  const {
+    position,
+    label,
+    subLabel,
+    size: nodeSize = 7,
+    labelVisible = true
+  } = node;
 
   const group = useRef<Group | null>(null);
   const [active, setActive] = useState<boolean>(false);
@@ -155,17 +167,19 @@ export const Node: FC<NodeProps> = ({
     }
   }, [canCollapse, collapsedNodeIds, id, isCollapsed, setCollapsedNodeIds]);
 
-  const [{ nodePosition, labelPosition }] = useSpring(
+  const [{ nodePosition, labelPosition, subLabelPosition }] = useSpring(
     () => ({
       from: {
         nodePosition: [0, 0, 0],
-        labelPosition: [0, -(nodeSize + 7), 2]
+        labelPosition: [0, -(nodeSize + 7), 2],
+        subLabelPosition: [0, -(nodeSize + 15), 2]
       },
       to: {
         nodePosition: position
           ? [position.x, position.y, position.z]
           : [0, 0, 0],
-        labelPosition: [0, -(nodeSize + 7), 2]
+        labelPosition: [0, -(nodeSize + 7), 2],
+        subLabelPosition: [0, -(nodeSize + 15), 2]
       },
       config: {
         ...animationConfig,
@@ -230,6 +244,11 @@ export const Node: FC<NodeProps> = ({
             canCollapse,
             isCollapsed
           });
+        }
+      }}
+      onDoubleClick={() => {
+        if (!disabled && !isDragging) {
+          onDoubleClick?.(node);
         }
       }}
       onContextMenu={() => {
@@ -298,20 +317,38 @@ export const Node: FC<NodeProps> = ({
         </Html>
       )}
       {(labelVisible || isSelected || active) && label && (
-        <a.group position={labelPosition as any}>
-          <Label
-            text={label}
-            fontUrl={labelFontUrl}
-            opacity={selectionOpacity}
-            stroke={theme.node.label.stroke}
-            active={isSelected || active || isDragging || isActive}
-            color={
-              isSelected || active || isDragging || isActive
-                ? theme.node.label.activeColor
-                : theme.node.label.color
-            }
-          />
-        </a.group>
+        <>
+          <a.group position={labelPosition as any}>
+            <Label
+              text={label}
+              fontUrl={labelFontUrl}
+              opacity={selectionOpacity}
+              stroke={theme.node.label.stroke}
+              active={isSelected || active || isDragging || isActive}
+              color={
+                isSelected || active || isDragging || isActive
+                  ? theme.node.label.activeColor
+                  : theme.node.label.color
+              }
+            />
+          </a.group>
+          {subLabel && (
+            <a.group position={subLabelPosition as any}>
+              <Label
+                text={subLabel}
+                fontUrl={labelFontUrl}
+                opacity={selectionOpacity}
+                stroke={theme.node.label.stroke}
+                active={isSelected || active || isDragging || isActive}
+                color={
+                  isSelected || active || isDragging || isActive
+                    ? theme.node.label.activeColor
+                    : theme.node.label.color
+                }
+              />
+            </a.group>
+          )}
+        </>
       )}
     </a.group>
   );
